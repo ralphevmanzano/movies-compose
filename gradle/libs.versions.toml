@@ -16,6 +16,8 @@ hilt = "2.52"
 okHttp = "4.12.0"
 googleSecretPlugin = "2.0.1"
 ksp = "2.0.10-1.0.24"
+landscapist = "2.3.6"
+composeMaterial = "1.7.2"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -32,6 +34,7 @@ androidx-ui-tooling-preview = { group = "androidx.compose.ui", name = "ui-toolin
 androidx-ui-test-manifest = { group = "androidx.compose.ui", name = "ui-test-manifest" }
 androidx-ui-test-junit4 = { group = "androidx.compose.ui", name = "ui-test-junit4" }
 androidx-material3 = { group = "androidx.compose.material3", name = "material3" }
+androidx-compose-material = { group = "androidx.compose.material", name = "material", version.ref = "composeMaterial" }
 navigation-compose = { module = "androidx.navigation:navigation-compose", version.ref = "composeNavigation" }
 kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "serialization"}
 retrofit = { module = "com.squareup.retrofit2:retrofit", version.ref = "retrofit" }
@@ -44,6 +47,10 @@ hilt-compiler = { module = "com.google.dagger:hilt-compiler", version.ref = "hil
 okhttp-bom = { module = "com.squareup.okhttp3:okhttp-bom", version.ref = "okHttp" }
 okhttp-logging-interceptor = { module = "com.squareup.okhttp3:logging-interceptor" }
 okhttp-mockwebserver = { module = "com.squareup.okhttp3:mockwebserver" }
+landscapist-glide = { group = "com.github.skydoves", name = "landscapist-glide", version.ref = "landscapist" }
+landscapist-palette = { group = "com.github.skydoves", name = "landscapist-palette", version.ref = "landscapist" }
+landscapist-animation = { group = "com.github.skydoves", name = "landscapist-animation", version.ref = "landscapist" }
+landscapist-placeholder = { group = "com.github.skydoves", name = "landscapist-placeholder", version.ref = "landscapist" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

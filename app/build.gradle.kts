@@ -69,6 +69,7 @@ dependencies {
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
+    implementation(libs.androidx.compose.material)
 
     implementation(libs.navigation.compose)
     implementation(libs.kotlinx.serialization.json)
@@ -85,6 +86,12 @@ dependencies {
     // hilt
     implementation(libs.hilt.android)
     ksp(libs.hilt.compiler)
+
+    // landscapist
+    implementation(libs.landscapist.glide)
+    implementation(libs.landscapist.palette)
+    implementation(libs.landscapist.animation)
+    implementation(libs.landscapist.placeholder)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
