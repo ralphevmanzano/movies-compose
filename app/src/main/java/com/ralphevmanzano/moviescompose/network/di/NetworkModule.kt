@@ -1,6 +1,8 @@
-package com.ralphevmanzano.moviescompose.data.network
+package com.ralphevmanzano.moviescompose.network.di
 
 import com.ralphevmanzano.moviescompose.BuildConfig
+import com.ralphevmanzano.moviescompose.network.MoviesApiKeyInterceptor
+import com.ralphevmanzano.moviescompose.network.MoviesService
 import com.skydoves.sandwich.retrofit.adapters.ApiResponseCallAdapterFactory
 import dagger.Module
 import dagger.Provides
@@ -36,6 +38,7 @@ class NetworkModule {
                         },
                     )
                 }
+                this.addInterceptor(MoviesApiKeyInterceptor())
             }
             .build()
     }

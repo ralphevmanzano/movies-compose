@@ -39,12 +39,13 @@ import com.ralphevmanzano.moviescompose.ui.favorites.FavoritesScreen
 import com.ralphevmanzano.moviescompose.ui.home.HomeScreen
 import com.ralphevmanzano.moviescompose.ui.search.SearchScreen
 import com.ralphevmanzano.moviescompose.ui.theme.MoviesComposeTheme
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.serialization.Serializable
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
 
         val routes = listOf(
             TopLevelRoute("Home", MovieScreen.Home, Icons.Filled.Home),

@@ -1,4 +1,4 @@
-package com.ralphevmanzano.moviescompose.data.network.model
+package com.ralphevmanzano.moviescompose.network.model
 
 import com.ralphevmanzano.moviescompose.domain.model.Genre
 import kotlinx.serialization.SerialName
