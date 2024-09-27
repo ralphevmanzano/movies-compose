@@ -10,11 +10,13 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.ralphevmanzano.moviescompose.domain.model.Category
 import com.ralphevmanzano.moviescompose.domain.model.Movie
 
 @Composable
@@ -26,26 +28,36 @@ fun HomeScreen(
     val uiState by homeViewModel.uiState.collectAsStateWithLifecycle()
     val allMovies by homeViewModel.allMovies.collectAsStateWithLifecycle()
 
+    LaunchedEffect(key1 = homeViewModel) {
+        homeViewModel.fetchAllMovies()
+    }
+
     Column(
         modifier = modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
-        if (uiState == HomeUiState.Loading) {
+        if (uiState is HomeUiState.Loading && (uiState as HomeUiState.Loading).category == null) {
             CircularProgressIndicator()
         } else {
             LazyColumn {
-                item {
-                    MoviesSection("Now Playing", allMovies.nowPlaying, modifier = Modifier.fillMaxWidth())
-                }
-                item {
-                    MoviesSection("Popular", allMovies.popular, modifier = Modifier.fillMaxWidth())
-                }
-                item {
-                    MoviesSection("Top Rated", allMovies.topRated, modifier = Modifier.fillMaxWidth())
-                }
-                item {
-                    MoviesSection("Upcoming", allMovies.upcoming, modifier = Modifier.fillMaxWidth())
+                val categoriesWithMovies = listOf(
+                    Category.NOW_PLAYING to allMovies.nowPlaying,
+                    Category.UPCOMING to allMovies.upcoming,
+                    Category.POPULAR to allMovies.popular,
+                    Category.TOP_RATED to allMovies.topRated
+                )
+
+                categoriesWithMovies.forEach { (category, movies) ->
+                    item {
+                        MoviesSection(
+                            category = category,
+                            movieList = movies,
+                            modifier = Modifier.fillMaxWidth(),
+                            isLoading = uiState is HomeUiState.Loading && (uiState as HomeUiState.Loading).category == category,
+                            fetchNextPage = { homeViewModel.fetchNextPage(category) }
+                        )
+                    }
                 }
             }
         }

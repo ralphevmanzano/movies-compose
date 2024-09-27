@@ -31,15 +31,12 @@ class HomeRepositoryImpl @Inject constructor(
     ): Flow<MoviesWithCategory> = flow {
         try {
             coroutineScope {
-                val nowPlayingDeferred = async { moviesService.getNowPlaying(1) }
-                val popularDeferred = async { moviesService.getPopular(1) }
-                val topRatedDeferred = async { moviesService.getTopRated(1) }
-                val upcomingDeferred = async { moviesService.getUpcoming(1) }
-
-                val nowPlaying = handleApiResponse(nowPlayingDeferred.await())?.results.orEmpty()
-                val popular = handleApiResponse(popularDeferred.await())?.results.orEmpty()
-                val topRated = handleApiResponse(topRatedDeferred.await())?.results.orEmpty()
-                val upcoming = handleApiResponse(upcomingDeferred.await())?.results.orEmpty()
+                val (nowPlaying, popular, topRated, upcoming) = listOf(
+                    async { moviesService.getNowPlaying(1) },
+                    async { moviesService.getPopular(1) },
+                    async { moviesService.getTopRated(1) },
+                    async { moviesService.getUpcoming(1) }
+                ).awaitAll().map { handleApiResponse(it)?.results.orEmpty() }
 
                 val featured = nowPlaying.random()
                 val nowPlayingMovies = nowPlaying.filter { it != featured }
@@ -51,6 +48,7 @@ class HomeRepositoryImpl @Inject constructor(
                     topRated = topRated,
                     upcoming = upcoming
                 )
+
                 emit(moviesWithCategory)
             }
         } catch (e: Exception) {
@@ -78,7 +76,7 @@ class HomeRepositoryImpl @Inject constructor(
         onComplete: () -> Unit,
         onError: (String?) -> Unit
     ): Flow<List<Movie>> = flow {
-        val response = moviesService.getNowPlaying(page)
+        val response = moviesService.getPopular(page)
         response.suspendOnSuccess {
             val movies = data.results
             emit(movies)
@@ -92,7 +90,7 @@ class HomeRepositoryImpl @Inject constructor(
         onComplete: () -> Unit,
         onError: (String?) -> Unit
     ): Flow<List<Movie>> = flow {
-        val response = moviesService.getNowPlaying(page)
+        val response = moviesService.getTopRated(page)
         response.suspendOnSuccess {
             val movies = data.results
             emit(movies)
@@ -106,7 +104,7 @@ class HomeRepositoryImpl @Inject constructor(
         onComplete: () -> Unit,
         onError: (String?) -> Unit
     ): Flow<List<Movie>> = flow {
-        val response = moviesService.getNowPlaying(page)
+        val response = moviesService.getUpcoming(page)
         response.suspendOnSuccess {
             val movies = data.results
             emit(movies)
