@@ -9,7 +9,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
@@ -19,9 +18,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
@@ -36,6 +34,8 @@ import com.skydoves.landscapist.components.rememberImageComponent
 import com.skydoves.landscapist.glide.GlideImage
 import com.skydoves.landscapist.placeholder.shimmer.Shimmer
 import com.skydoves.landscapist.placeholder.shimmer.ShimmerPlugin
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.filter
 
 @Composable
 fun MoviesSection(
@@ -56,16 +56,19 @@ fun MoviesSection(
             derivedStateOf {
                 if (movieList.isEmpty()) return@derivedStateOf false
                 val lastDisplayedIndex = scrollState.layoutInfo.visibleItemsInfo.lastOrNull()?.index ?: return@derivedStateOf false
-                val shouldFetch = lastDisplayedIndex >= scrollState.layoutInfo.totalItemsCount - threshold
+                val shouldFetch = lastDisplayedIndex >= scrollState.layoutInfo.totalItemsCount - threshold && !isLoading
                 return@derivedStateOf shouldFetch
             }
         }
 
-        LaunchedEffect(key1 = shouldFetch) {
-            if (shouldFetch) {
-                println("Fetching, currentSize = ${scrollState.layoutInfo.totalItemsCount}")
-                fetchNextPage()
-            }
+        LaunchedEffect(key1 = scrollState) {
+            snapshotFlow { shouldFetch }
+                .distinctUntilChanged()
+                .filter { it }
+                .collect {
+                    fetchNextPage()
+                    println("Fetching, currentSize = ${scrollState.layoutInfo.totalItemsCount}")
+                }
         }
 
         Text(
@@ -80,7 +83,7 @@ fun MoviesSection(
             contentPadding = PaddingValues(horizontal = 12.dp)
         ) {
             // can't use key as the responses here have some duplicates
-            items(movieList) { movie ->
+            items(movieList, key = { item -> item.id }) { movie ->
                 MovieItem(movie = movie)
             }
         }

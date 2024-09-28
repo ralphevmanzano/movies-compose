@@ -65,9 +65,9 @@ class HomeViewModel @Inject constructor(
                     onComplete = { _uiState.value = HomeUiState.Idle },
                     onError = { _uiState.value = HomeUiState.Error(it) }
                 ).collect { newPageMovies ->
-                    _allMovies.update {
-                        val currentMovies = it.nowPlaying
-                        it.copy(nowPlaying = currentMovies + newPageMovies)
+                    _allMovies.update { allMovies ->
+                        val currentMovies = allMovies.nowPlaying
+                        allMovies.copy(nowPlaying = (currentMovies + newPageMovies).distinctBy { it.id })
                     }
                 }
             }
@@ -84,9 +84,9 @@ class HomeViewModel @Inject constructor(
                     onComplete = { _uiState.value = HomeUiState.Idle },
                     onError = { _uiState.value = HomeUiState.Error(it) }
                 ).collect { newPageMovies ->
-                    _allMovies.update {
-                        val currentMovies = it.upcoming
-                        it.copy(upcoming = currentMovies + newPageMovies)
+                    _allMovies.update { allMovies ->
+                        val currentMovies = allMovies.upcoming
+                        allMovies.copy(upcoming = (currentMovies + newPageMovies).distinctBy { it.id })
                     }
                 }
             }
@@ -103,9 +103,9 @@ class HomeViewModel @Inject constructor(
                     onComplete = { _uiState.value = HomeUiState.Idle },
                     onError = { _uiState.value = HomeUiState.Error(it) }
                 ).collect { newPageMovies ->
-                    _allMovies.update {
-                        val currentMovies = it.popular
-                        it.copy(popular = currentMovies + newPageMovies)
+                    _allMovies.update { allMovies ->
+                        val currentMovies = allMovies.popular
+                        allMovies.copy(popular = (currentMovies + newPageMovies).distinctBy { it.id })
                     }
                 }
             }
@@ -122,9 +122,9 @@ class HomeViewModel @Inject constructor(
                     onComplete = { _uiState.value = HomeUiState.Idle },
                     onError = { _uiState.value = HomeUiState.Error(it) }
                 ).collect { newPageMovies ->
-                    _allMovies.update {
-                        val currentMovies = it.topRated
-                        it.copy(topRated = currentMovies + newPageMovies)
+                    _allMovies.update { allMovies ->
+                        val currentMovies = allMovies.topRated
+                        allMovies.copy(topRated = (currentMovies + newPageMovies).distinctBy { it.id })
                     }
                 }
             }
