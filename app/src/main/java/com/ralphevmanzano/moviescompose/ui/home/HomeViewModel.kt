@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ralphevmanzano.moviescompose.data.repository.home.HomeRepository
 import com.ralphevmanzano.moviescompose.domain.model.Category
+import com.ralphevmanzano.moviescompose.domain.model.Movie
 import com.ralphevmanzano.moviescompose.domain.model.MoviesWithCategory
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -24,7 +25,7 @@ class HomeViewModel @Inject constructor(
     private val _uiState = MutableStateFlow<HomeUiState>(HomeUiState.Idle)
     val uiState = _uiState.asStateFlow()
 
-    private val _allMovies = MutableStateFlow(MoviesWithCategory())
+    private val _allMovies = MutableStateFlow(MoviesWithCategory(Movie()))
     val allMovies = _allMovies.asStateFlow()
 
     private var nowPlayingPage = 1

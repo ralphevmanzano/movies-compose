@@ -31,6 +31,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
+import com.ralphevmanzano.moviescompose.domain.model.Movie
 import com.ralphevmanzano.moviescompose.navigation.MovieScreen
 import com.ralphevmanzano.moviescompose.navigation.TopLevelRoute
 import com.ralphevmanzano.moviescompose.ui.components.MoviesAppBar
@@ -92,15 +93,12 @@ class MainActivity : ComponentActivity() {
                         composable<MovieScreen.Home> {
                             HomeScreen(
                                 onMovieClicked = {
-                                    navController.navigate(MovieScreen.Details(it.id))
+                                    navController.navigate(MovieScreen.Details(it))
                                 }
                             )
                         }
                         composable<MovieScreen.Details> {
-                            val args = it.toRoute<MovieScreen.Details>()
-                            DetailsScreen(
-                                id = args.id
-                            )
+                            DetailsScreen()
                         }
                         composable<MovieScreen.Search> {
                             SearchScreen()

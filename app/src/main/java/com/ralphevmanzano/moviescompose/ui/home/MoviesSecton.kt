@@ -39,11 +39,12 @@ import kotlinx.coroutines.flow.filter
 
 @Composable
 fun MoviesSection(
+    modifier: Modifier = Modifier,
     category: Category,
     movieList: List<Movie>,
-    modifier: Modifier = Modifier,
     isLoading: Boolean = false,
-    fetchNextPage: () -> Unit
+    fetchNextPage: () -> Unit,
+    onMovieClicked: (Int) -> Unit
 ) {
 
     Column(
@@ -82,22 +83,30 @@ fun MoviesSection(
             horizontalArrangement = Arrangement.spacedBy(8.dp),
             contentPadding = PaddingValues(horizontal = 12.dp)
         ) {
-            // can't use key as the responses here have some duplicates
             items(movieList, key = { item -> item.id }) { movie ->
-                MovieItem(movie = movie)
+                MovieItem(
+                    movie = movie,
+                    onMovieClicked = {
+                        onMovieClicked(movie.id)
+                    }
+                )
             }
         }
     }
 }
 
 @Composable
-fun MovieItem(movie: Movie, modifier: Modifier = Modifier) {
+fun MovieItem(
+    modifier: Modifier = Modifier,
+    movie: Movie,
+    onMovieClicked: (Int) -> Unit
+) {
     Card(
         modifier = modifier
             .size(106.dp, 164.dp)
             .testTag("Movie")
             .clickable {
-                // TODO navigate to movie detail
+                onMovieClicked(movie.id)
             },
         shape = RoundedCornerShape(5.dp)
     ) {
@@ -127,7 +136,8 @@ private fun MoviesSectionPreview() {
                 Movie(id = 2, posterPath = "/zQc1PITqFxZDbEmHlQgO5Mxc4Od.jpg"),
                 Movie(id = 3, posterPath = "/qbkAqmmEIZfrCO8ZQAuIuVMlWoV.jpg")
             ),
-            fetchNextPage = {}
+            fetchNextPage = {},
+            onMovieClicked = {}
         )
     }
 }

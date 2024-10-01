@@ -23,10 +23,7 @@ fun MoviesAppBar(
                 fontSize = 18.sp,
                 color = Color.Black
             )
-        },
-        colors = TopAppBarDefaults.topAppBarColors().copy(
-            containerColor = Color.White,
-        )
+        }
     )
 }
 
