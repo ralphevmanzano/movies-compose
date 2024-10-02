@@ -14,7 +14,7 @@ sealed interface MovieScreen {
     data object Search: MovieScreen
 
     @Serializable
-    data object Favorites: MovieScreen
+    data object MyList: MovieScreen
 }
 
 data class TopLevelRoute<T : Any>(val name: String, val route: T, val icon: ImageVector)

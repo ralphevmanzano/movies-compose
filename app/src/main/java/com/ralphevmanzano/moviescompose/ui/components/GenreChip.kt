@@ -2,6 +2,7 @@ package com.ralphevmanzano.moviescompose.ui.components
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.SuggestionChip
 import androidx.compose.material3.SuggestionChipDefaults
 import androidx.compose.material3.Text
@@ -10,8 +11,10 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.ralphevmanzano.moviescompose.ui.theme.LightBlue
+import com.ralphevmanzano.moviescompose.ui.theme.MoviesComposeTheme
 
 @Composable
 fun GenreChip(
@@ -31,5 +34,14 @@ fun GenreChip(
         modifier = modifier,
         interactionSource = interactionSource,
         shape = shape,
+
     )
+}
+
+@Preview
+@Composable
+private fun GenreChipPreview() {
+    MoviesComposeTheme {
+        GenreChip(genreName = "Action")
+    }
 }
