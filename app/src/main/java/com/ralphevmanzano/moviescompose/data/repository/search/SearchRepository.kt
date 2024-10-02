@@ -7,5 +7,9 @@ import kotlinx.coroutines.flow.Flow
 interface SearchRepository {
 
     @WorkerThread
-    fun searchMovies(query: String, page: Int): Flow<List<Movie>>
+    fun searchMovies(
+        query: String, page: Int, onStart: () -> Unit,
+        onComplete: () -> Unit,
+        onError: (String?) -> Unit
+    ): Flow<List<Movie>>
 }

@@ -4,6 +4,8 @@ import com.ralphevmanzano.moviescompose.data.repository.details.DetailsRepositor
 import com.ralphevmanzano.moviescompose.data.repository.details.DetailsRepositoryImpl
 import com.ralphevmanzano.moviescompose.data.repository.home.HomeRepository
 import com.ralphevmanzano.moviescompose.data.repository.home.HomeRepositoryImpl
+import com.ralphevmanzano.moviescompose.data.repository.search.SearchRepository
+import com.ralphevmanzano.moviescompose.data.repository.search.SearchRepositoryImpl
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -18,4 +20,7 @@ internal interface DataModule {
 
     @Binds
     fun bindsDetailsRepository(detailsRepositoryImpl: DetailsRepositoryImpl): DetailsRepository
+
+    @Binds
+    fun bindsSearchRepository(searchRepositoryImpl: SearchRepositoryImpl): SearchRepository
 }

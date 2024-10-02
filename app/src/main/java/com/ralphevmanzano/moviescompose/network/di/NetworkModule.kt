@@ -23,6 +23,7 @@ class NetworkModule {
     @Singleton
     @Provides
     fun provideJson(): Json = Json {
+        coerceInputValues = true
         ignoreUnknownKeys = true
     }
 

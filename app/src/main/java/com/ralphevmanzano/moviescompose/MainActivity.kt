@@ -13,19 +13,16 @@ import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavDestination.Companion.hasRoute
 import androidx.navigation.NavDestination.Companion.hierarchy
-import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.ralphevmanzano.moviescompose.navigation.MovieScreen
 import com.ralphevmanzano.moviescompose.navigation.TopLevelRoute
-import com.ralphevmanzano.moviescompose.ui.components.MoviesAppBar
 import com.ralphevmanzano.moviescompose.ui.details.DetailsScreen
 import com.ralphevmanzano.moviescompose.ui.favorites.MyListScreen
 import com.ralphevmanzano.moviescompose.ui.home.HomeScreen
@@ -50,16 +47,11 @@ class MainActivity : ComponentActivity() {
                 val navBackStackEntry by navController.currentBackStackEntryAsState()
                 val currentDestination = navBackStackEntry?.destination
 
-                val showBottomAndAppBar = !(currentDestination?.hasRoute(MovieScreen.Details::class) ?: true)
+                val showBottomBar = !(currentDestination?.hasRoute(MovieScreen.Details::class) ?: true)
 
                 Scaffold (
-                    topBar = {
-                        if (showBottomAndAppBar) {
-                            MoviesAppBar("Movies")
-                        }
-                    },
                     bottomBar = {
-                        if (showBottomAndAppBar) {
+                        if (showBottomBar) {
                             NavigationBar {
                                 routes.forEach { route ->
                                     NavigationBarItem(
@@ -101,7 +93,11 @@ class MainActivity : ComponentActivity() {
                             )
                         }
                         composable<MovieScreen.Search> {
-                            SearchScreen()
+                            SearchScreen(
+                                onMovieClicked = {
+                                    navController.navigate(MovieScreen.Details(it))
+                                }
+                            )
                         }
                         composable<MovieScreen.MyList> {
                             MyListScreen()
