@@ -1,6 +1,5 @@
 package com.ralphevmanzano.moviescompose.ui.details
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -22,6 +21,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
@@ -37,9 +37,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -64,6 +62,7 @@ fun DetailsScreen(
 ) {
     val uiState by detailsViewModel.uiState.collectAsStateWithLifecycle()
     val movie by detailsViewModel.movieDetails.collectAsStateWithLifecycle()
+    val myList by detailsViewModel.myList.collectAsStateWithLifecycle()
 
     Box(
         modifier = modifier
@@ -93,7 +92,11 @@ fun DetailsScreen(
                         .padding(horizontal = 16.dp),
                     style = MaterialTheme.typography.headlineLarge.copy(fontWeight = FontWeight.Bold)
                 )
-                MovieInfoSection(movie)
+                MovieInfoSection(
+                    movie = movie,
+                    isAdded = myList.any{ it.id == movie!!.id },
+                    onAddToList = { detailsViewModel.addToMyList(it) }
+                )
                 HorizontalDivider(modifier = Modifier.padding(vertical = 12.dp))
                 Text(text = movie!!.overview, modifier = Modifier.padding(horizontal = 16.dp))
                 HorizontalDivider(modifier = Modifier.padding(vertical = 12.dp))
@@ -117,7 +120,9 @@ fun DetailsScreen(
                         Text(text = movie!!.status)
                     }
                 }
-                Spacer(modifier = Modifier.height(32.dp).fillMaxWidth())
+                Spacer(modifier = Modifier
+                    .height(32.dp)
+                    .fillMaxWidth())
             }
         }
         DetailsAppBar(onNavigateBack)
@@ -126,7 +131,7 @@ fun DetailsScreen(
 
 @Composable
 @OptIn(ExperimentalLayoutApi::class)
-private fun MovieInfoSection(movie: Movie?, onAddToList: () -> Unit = {}) {
+private fun MovieInfoSection(movie: Movie?, isAdded: Boolean, onAddToList: (Movie) -> Unit = {}) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -182,11 +187,13 @@ private fun MovieInfoSection(movie: Movie?, onAddToList: () -> Unit = {}) {
             }
         }
         Column(
-            modifier = Modifier
-                .clickable { onAddToList() },
+            modifier = Modifier.clickable { onAddToList(movie!!) },
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Icon(imageVector = Icons.Default.Add, contentDescription = "add to list")
+            Icon(
+                imageVector = if (isAdded) Icons.Default.Check else Icons.Default.Add,
+                contentDescription = "add to list"
+            )
             Text(text = stringResource(R.string.my_list))
         }
     }

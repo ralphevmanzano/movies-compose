@@ -3,6 +3,7 @@ package com.ralphevmanzano.moviescompose.ui.home
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ralphevmanzano.moviescompose.data.repository.home.HomeRepository
+import com.ralphevmanzano.moviescompose.data.repository.my_list.MyListRepository
 import com.ralphevmanzano.moviescompose.domain.model.Category
 import com.ralphevmanzano.moviescompose.domain.model.Movie
 import com.ralphevmanzano.moviescompose.domain.model.MoviesWithCategory
@@ -11,8 +12,6 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.mapLatest
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -20,7 +19,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
-    private val homeRepository: HomeRepository
+    private val homeRepository: HomeRepository,
+    private val myListRepository: MyListRepository
 ): ViewModel() {
     private val _uiState = MutableStateFlow<HomeUiState>(HomeUiState.Idle)
     val uiState = _uiState.asStateFlow()
@@ -32,6 +32,13 @@ class HomeViewModel @Inject constructor(
     private var upcomingPage = 1
     private var popularPage = 1
     private var topRatedPage = 1
+
+    val myList: StateFlow<List<Movie>> = myListRepository.getMyList()
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5000),
+            initialValue = emptyList()
+        )
 
     fun fetchAllMovies() {
         viewModelScope.launch {
@@ -128,6 +135,16 @@ class HomeViewModel @Inject constructor(
                         allMovies.copy(topRated = (currentMovies + newPageMovies).distinctBy { it.id })
                     }
                 }
+            }
+        }
+    }
+
+    fun addToMyList(movie: Movie) {
+        viewModelScope.launch {
+            if (myList.value.any { it.id == movie.id }) {
+                myListRepository.removeFromMyList(movie)
+            } else {
+                myListRepository.addToMyList(movie)
             }
         }
     }

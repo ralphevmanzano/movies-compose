@@ -6,6 +6,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ralphevmanzano.moviescompose.data.repository.details.DetailsRepository
+import com.ralphevmanzano.moviescompose.data.repository.my_list.MyListRepository
 import com.ralphevmanzano.moviescompose.domain.model.Movie
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -16,11 +17,13 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class DetailsViewModel @Inject constructor(
     private val detailsRepository: DetailsRepository,
+    private val myListRepository: MyListRepository,
     savedStateHandle: SavedStateHandle
 ): ViewModel() {
 
@@ -40,6 +43,23 @@ class DetailsViewModel @Inject constructor(
         started = SharingStarted.WhileSubscribed(5_000),
         initialValue = null
     )
+
+    val myList: StateFlow<List<Movie>> = myListRepository.getMyList()
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5000),
+            initialValue = emptyList()
+        )
+
+    fun addToMyList(movie: Movie) {
+        viewModelScope.launch {
+            if (myList.value.any { it.id == movie.id }) {
+                myListRepository.removeFromMyList(movie)
+            } else {
+                myListRepository.addToMyList(movie)
+            }
+        }
+    }
 }
 
 sealed interface DetailsUiState {

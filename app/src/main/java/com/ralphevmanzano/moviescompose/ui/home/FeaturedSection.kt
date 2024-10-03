@@ -14,6 +14,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Icon
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -38,8 +39,11 @@ import com.skydoves.landscapist.glide.GlideImage
 
 @Composable
 fun FeaturedSection(
+    modifier: Modifier = Modifier,
     movie: Movie,
-    modifier: Modifier = Modifier
+    isAddedToMyList: Boolean,
+    onInfoClick: (Int) -> Unit,
+    onAddToMyList: (Movie) -> Unit
 ) {
     Card(
         modifier = modifier.fillMaxWidth(),
@@ -77,7 +81,7 @@ fun FeaturedSection(
                     Button(
                         modifier = Modifier
                             .weight(1f),
-                        onClick = { /*TODO*/ },
+                        onClick = { onInfoClick(movie.id) },
                         colors = ButtonDefaults.buttonColors(containerColor = Color.White),
                         shape = RoundedCornerShape(5),
                     ) {
@@ -93,13 +97,13 @@ fun FeaturedSection(
                     Spacer(modifier = Modifier.width(8.dp))
                     Button(
                         modifier = Modifier.weight(1f),
-                        onClick = { /*TODO*/ },
+                        onClick = { onAddToMyList(movie) },
                         colors = ButtonDefaults.buttonColors(containerColor = LightGray),
                         shape = RoundedCornerShape(5),
                     ) {
                         Row(verticalAlignment = Alignment.CenterVertically) {
                             Icon(
-                                imageVector = Icons.Default.Add,
+                                imageVector = if (isAddedToMyList) Icons.Default.Check else Icons.Default.Add,
                                 contentDescription = null,
                                 tint = Color.White
                             )
@@ -118,7 +122,7 @@ fun FeaturedSection(
 private fun FeaturedSectionPreview() {
     MoviesComposeTheme {
         FeaturedSection(
-            Movie(
+            movie = Movie(
                 id = 1,
                 posterPath = "/865DntZzOdX6rLMd405R0nFkLmL.jpg",
                 genres = listOf(
@@ -126,7 +130,10 @@ private fun FeaturedSectionPreview() {
                     Genre(2, "Adventure"),
                     Genre(3, "Comedy")
                 )
-            )
+            ),
+            isAddedToMyList = false,
+            onInfoClick = {},
+            onAddToMyList = {}
         )
     }
 }

@@ -158,7 +158,7 @@ fun SearchScreen(
                 contentPadding = PaddingValues(top = 72.dp),
                 state = scrollState
             ) {
-                itemsIndexed(movies) { index, movie ->
+                itemsIndexed(movies, key = { _, movie -> movie.id }) { index, movie ->
                     SearchItem(
                         movie = movie,
                         modifier = Modifier.fillMaxWidth(),

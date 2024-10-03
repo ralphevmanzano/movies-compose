@@ -24,7 +24,7 @@ import androidx.navigation.compose.rememberNavController
 import com.ralphevmanzano.moviescompose.navigation.MovieScreen
 import com.ralphevmanzano.moviescompose.navigation.TopLevelRoute
 import com.ralphevmanzano.moviescompose.ui.details.DetailsScreen
-import com.ralphevmanzano.moviescompose.ui.favorites.MyListScreen
+import com.ralphevmanzano.moviescompose.ui.my_list.MyListScreen
 import com.ralphevmanzano.moviescompose.ui.home.HomeScreen
 import com.ralphevmanzano.moviescompose.ui.search.SearchScreen
 import com.ralphevmanzano.moviescompose.ui.theme.MoviesComposeTheme
@@ -100,7 +100,11 @@ class MainActivity : ComponentActivity() {
                             )
                         }
                         composable<MovieScreen.MyList> {
-                            MyListScreen()
+                            MyListScreen(
+                                onMovieClicked = {
+                                    navController.navigate(MovieScreen.Details(it))
+                                }
+                            )
                         }
                     }
                 }

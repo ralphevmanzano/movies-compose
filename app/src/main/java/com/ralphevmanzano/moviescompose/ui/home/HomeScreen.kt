@@ -30,6 +30,7 @@ fun HomeScreen(
 ) {
     val uiState by homeViewModel.uiState.collectAsStateWithLifecycle()
     val allMovies by homeViewModel.allMovies.collectAsStateWithLifecycle()
+    val myList by homeViewModel.myList.collectAsStateWithLifecycle()
 
     LaunchedEffect(key1 = homeViewModel) {
         homeViewModel.fetchAllMovies()
@@ -52,7 +53,14 @@ fun HomeScreen(
                     item {
                         FeaturedSection(
                             movie = allMovies.featured,
-                            modifier = Modifier.padding(horizontal = 12.dp)
+                            modifier = Modifier.padding(horizontal = 12.dp),
+                            isAddedToMyList = myList.any { it.id == allMovies.featured.id },
+                            onInfoClick = { movieId ->
+                                onMovieClicked(movieId)
+                            },
+                            onAddToMyList = { movie ->
+                                homeViewModel.addToMyList(movie)
+                            }
                         )
                     }
 
