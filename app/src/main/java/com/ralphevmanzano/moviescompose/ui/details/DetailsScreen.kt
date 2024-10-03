@@ -1,5 +1,6 @@
 package com.ralphevmanzano.moviescompose.ui.details
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -36,6 +37,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -46,11 +48,13 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.ralphevmanzano.moviescompose.R
 import com.ralphevmanzano.moviescompose.domain.model.Movie
 import com.ralphevmanzano.moviescompose.ui.components.GenreChip
+import com.ralphevmanzano.moviescompose.ui.components.MoviePlaceHolder
 import com.ralphevmanzano.moviescompose.ui.components.TextWithIcon
 import com.ralphevmanzano.moviescompose.ui.theme.LightGray
 import com.ralphevmanzano.moviescompose.ui.theme.MoviesComposeTheme
 import com.skydoves.landscapist.ImageOptions
 import com.skydoves.landscapist.glide.GlideImage
+import java.util.Locale
 
 @Composable
 fun DetailsScreen(
@@ -77,7 +81,10 @@ fun DetailsScreen(
                         contentScale = ContentScale.Crop,
                         alignment = Alignment.TopCenter
                     ),
-                    modifier = Modifier.aspectRatio(4f / 3f)
+                    modifier = Modifier.aspectRatio(4f / 3f),
+                    failure = {
+                        MoviePlaceHolder()
+                    }
                 )
                 Spacer(modifier = Modifier.height(16.dp))
                 Text(
@@ -96,14 +103,21 @@ fun DetailsScreen(
                         .padding(horizontal = 16.dp),
                 ) {
                     Column(modifier = Modifier.weight(1f)) {
-                        Text(text = stringResource(R.string.languages), style = MaterialTheme.typography.bodyLarge)
+                        Text(
+                            text = stringResource(R.string.languages),
+                            style = MaterialTheme.typography.bodyLarge
+                        )
                         Text(text = movie!!.spokenLanguages.joinToString(", ") { it.name })
                     }
                     Column(modifier = Modifier.weight(1f)) {
-                        Text(text = stringResource(R.string.status), style = MaterialTheme.typography.bodyLarge)
+                        Text(
+                            text = stringResource(R.string.status),
+                            style = MaterialTheme.typography.bodyLarge
+                        )
                         Text(text = movie!!.status)
                     }
                 }
+                Spacer(modifier = Modifier.height(32.dp).fillMaxWidth())
             }
         }
         DetailsAppBar(onNavigateBack)
@@ -140,12 +154,19 @@ private fun MovieInfoSection(movie: Movie?, onAddToList: () -> Unit = {}) {
                     },
                     text = {
                         Text(
-                            text = movie.voteAverage.toString(),
+                            text = String.format(
+                                Locale.getDefault(),
+                                "%.1f",
+                                movie.voteAverage
+                            ),
                             style = MaterialTheme.typography.titleMedium
                         )
                     },
                 )
-                Text(text = "(${movie.voteCount})", style = MaterialTheme.typography.titleSmall)
+                Text(
+                    text = "(${String.format(Locale.getDefault(), "%,d", movie.voteCount)})",
+                    style = MaterialTheme.typography.titleSmall
+                )
             }
 
             if (movie!!.genres.isNotEmpty()) {

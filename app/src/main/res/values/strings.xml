@@ -6,4 +6,8 @@
     <string name="languages">Languages</string>
     <string name="status">Status</string>
     <string name="movies">Movies</string>
+    <string name="search_movies">Search movies...</string>
+    <string name="oh_darn_we_don_t_have_that">Oh darn. We don\'t have that.</string>
+    <string name="try_searching_for_another_movie">Try searching for another movie</string>
+    <string name="start_searching_for_movies">Start searching for movies</string>
 </resources>
