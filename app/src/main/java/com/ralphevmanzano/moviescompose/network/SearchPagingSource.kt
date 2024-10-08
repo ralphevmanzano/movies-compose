@@ -9,7 +9,8 @@ import com.skydoves.sandwich.isSuccess
 import com.skydoves.sandwich.messageOrNull
 import com.skydoves.sandwich.onSuccess
 
-class NowPlayingPagingSource(
+class SearchPagingSource(
+    private val query: String,
     private val moviesService: MoviesService
 ): PagingSource<Int, Movie>() {
 
@@ -24,8 +25,8 @@ class NowPlayingPagingSource(
         return try {
             val currentPage = params.key ?: 1
             val movies = mutableListOf<Movie>()
-            val totalPages: Int
-            val response = moviesService.getNowPlaying(currentPage)
+            var totalPages = 0
+            val response = moviesService.searchMovies(query, currentPage)
             if (response.isSuccess) {
                 val data = (response as ApiResponse.Success<MoviesResponse>).data
                 movies.addAll(data.results)

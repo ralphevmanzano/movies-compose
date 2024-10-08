@@ -10,7 +10,6 @@ import androidx.paging.cachedIn
 import com.ralphevmanzano.moviescompose.data.repository.home.HomeRepository
 import com.ralphevmanzano.moviescompose.data.repository.my_list.MyListRepository
 import com.ralphevmanzano.moviescompose.domain.model.Movie
-import com.ralphevmanzano.moviescompose.domain.model.MoviesWithCategory
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -28,9 +27,6 @@ class HomeViewModel @Inject constructor(
 ) : ViewModel() {
     private val _uiState = MutableStateFlow(HomeUiState())
     val uiState = _uiState.asStateFlow()
-
-    private val _allMovies = MutableStateFlow(MoviesWithCategory(Movie()))
-    val allMovies = _allMovies.asStateFlow()
 
     val myList: StateFlow<List<Movie>> = myListRepository.getMyList()
         .stateIn(

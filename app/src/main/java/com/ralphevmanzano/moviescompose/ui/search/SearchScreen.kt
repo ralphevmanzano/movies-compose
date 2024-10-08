@@ -1,7 +1,5 @@
 package com.ralphevmanzano.moviescompose.ui.search
 
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -15,13 +13,8 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.lazy.itemsIndexed
-import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Clear
-import androidx.compose.material.icons.filled.MoreVert
-import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -32,19 +25,14 @@ import androidx.compose.material3.SearchBar
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
-import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.isTraversalGroup
 import androidx.compose.ui.semantics.semantics
@@ -54,6 +42,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.paging.compose.collectAsLazyPagingItems
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.load.resource.bitmap.BitmapTransitionOptions.withCrossFade
@@ -62,13 +51,9 @@ import com.ralphevmanzano.moviescompose.R
 import com.ralphevmanzano.moviescompose.domain.model.Movie
 import com.ralphevmanzano.moviescompose.ui.components.MoviePlaceHolder
 import com.skydoves.landscapist.glide.GlideImage
-import com.skydoves.landscapist.rememberDrawablePainter
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.distinctUntilChanged
-import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.launch
-import okhttp3.internal.toImmutableList
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -79,8 +64,7 @@ fun SearchScreen(
 ) {
     var text by rememberSaveable { mutableStateOf("") }
     val uiState by searchViewModel.uiState.collectAsStateWithLifecycle()
-    val searchResults by searchViewModel.searchResults.collectAsStateWithLifecycle()
-    val movies = searchResults.toImmutableList()
+    val searchResults = searchViewModel.searchPaging.collectAsLazyPagingItems()
 
     val coroutineScope = rememberCoroutineScope()
     var job: Job? = null
@@ -91,6 +75,10 @@ fun SearchScreen(
             delay(1000)
             searchViewModel.onSearchChanged(text)
         }
+    }
+
+    LaunchedEffect(searchResults.loadState) {
+        searchViewModel.consumeSearchLoadState(searchResults)
     }
 
     Box(
@@ -131,41 +119,21 @@ fun SearchScreen(
             content = {}
         )
 
-        if (movies.isNotEmpty()) {
-            val scrollState = rememberLazyListState()
-            val threshold = 6
-            val pageSize = 20
-            val shouldFetch by remember {
-                derivedStateOf {
-                    if (movies.isEmpty()) return@derivedStateOf false
-                    val itemCount = scrollState.layoutInfo.totalItemsCount
-                    val lastDisplayedIndex = scrollState.layoutInfo.visibleItemsInfo.lastOrNull()?.index ?: return@derivedStateOf false
-                    val shouldFetch = itemCount >= pageSize && lastDisplayedIndex >= itemCount - threshold && uiState != SearchUiState.Loading
-                    return@derivedStateOf shouldFetch
-                }
-            }
-
-            LaunchedEffect(key1 = scrollState) {
-                snapshotFlow { shouldFetch }
-                    .distinctUntilChanged()
-                    .filter { it }
-                    .collect {
-                        searchViewModel.onNextPage()
-                    }
-            }
-
+        if (searchResults.itemCount > 0) {
             LazyColumn(
-                contentPadding = PaddingValues(top = 72.dp),
-                state = scrollState
+                contentPadding = PaddingValues(top = 72.dp)
             ) {
-                itemsIndexed(movies, key = { _, movie -> movie.id }) { index, movie ->
-                    SearchItem(
-                        movie = movie,
-                        modifier = Modifier.fillMaxWidth(),
-                        onMovieClicked = onMovieClicked
-                    )
-                    if (index < movies.lastIndex) {
-                        HorizontalDivider(thickness = 1.dp)
+                items(searchResults.itemCount) { index ->
+                    val movie = searchResults[index]
+                    if (movie != null) {
+                        SearchItem(
+                            movie = movie,
+                            modifier = Modifier.fillMaxWidth(),
+                            onMovieClicked = onMovieClicked
+                        )
+                        if (index < searchResults.itemSnapshotList.lastIndex) {
+                            HorizontalDivider(thickness = 1.dp)
+                        }
                     }
                 }
             }

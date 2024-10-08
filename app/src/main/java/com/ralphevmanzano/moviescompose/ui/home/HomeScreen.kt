@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -29,7 +30,6 @@ fun HomeScreen(
     homeViewModel: HomeViewModel = hiltViewModel()
 ) {
     val uiState by homeViewModel.uiState.collectAsStateWithLifecycle()
-    val allMovies by homeViewModel.allMovies.collectAsStateWithLifecycle()
     val myList by homeViewModel.myList.collectAsStateWithLifecycle()
 
     val nowPlayingPaging = homeViewModel.nowPlayingPaging.collectAsLazyPagingItems()
@@ -37,12 +37,15 @@ fun HomeScreen(
     val topRatedPaging = homeViewModel.topRatedPaging.collectAsLazyPagingItems()
     val upcomingPaging = homeViewModel.upcomingPaging.collectAsLazyPagingItems()
 
-    homeViewModel.apply {
-        generateFeaturedMovie(nowPlayingPaging.itemSnapshotList)
-        consumeNowPlayingLoadState(nowPlayingPaging.loadState)
-        consumePopularLoadState(popularPaging.loadState)
-        consumeTopRatedLoadState(topRatedPaging.loadState)
-        consumeUpcomingLoadState(upcomingPaging.loadState)
+    LaunchedEffect(nowPlayingPaging.loadState, popularPaging.loadState, topRatedPaging.loadState, upcomingPaging.loadState) {
+        homeViewModel.consumeNowPlayingLoadState(nowPlayingPaging.loadState)
+        homeViewModel.consumePopularLoadState(popularPaging.loadState)
+        homeViewModel.consumeTopRatedLoadState(topRatedPaging.loadState)
+        homeViewModel.consumeUpcomingLoadState(upcomingPaging.loadState)
+    }
+
+    LaunchedEffect(nowPlayingPaging.itemSnapshotList) {
+        homeViewModel.generateFeaturedMovie(nowPlayingPaging.itemSnapshotList)
     }
 
     Box(modifier = modifier.fillMaxSize()) {
