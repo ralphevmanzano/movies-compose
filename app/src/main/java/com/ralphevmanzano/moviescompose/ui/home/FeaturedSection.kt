@@ -1,6 +1,8 @@
 package com.ralphevmanzano.moviescompose.ui.home
 
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -26,6 +28,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -42,6 +45,7 @@ fun FeaturedSection(
     modifier: Modifier = Modifier,
     movie: Movie,
     isAddedToMyList: Boolean,
+    isLoading: Boolean,
     onInfoClick: (Int) -> Unit,
     onAddToMyList: (Movie) -> Unit
 ) {
@@ -51,64 +55,72 @@ fun FeaturedSection(
         border = BorderStroke(1.dp, MaterialTheme.colorScheme.outline)
     ) {
         Box {
-            GlideImage(
-                modifier = Modifier.aspectRatio(3f / 4f),
-                imageModel = { movie.posterUrl },
-                imageOptions = ImageOptions(contentScale = ContentScale.Crop),
-            )
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .align(Alignment.BottomCenter)
-            ) {
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.Center
-                ) {
-                    movie.genres.forEachIndexed { index, genre ->
-                        Text(text = genre.name)
-                        if (index < movie.genres.size - 1 && movie.genres.size > 1) {
-                            Text(text = stringResource(R.string.bullet))
-                        }
-                    }
-                }
-                Row(
+            if (isLoading) {
+                Box(
+                    modifier = Modifier
+                        .aspectRatio(3f/4f)
+                        .background(color = Color.LightGray)
+                )
+            } else {
+                GlideImage(
+                    modifier = Modifier.aspectRatio(3f / 4f),
+                    imageModel = { movie.posterUrl },
+                    imageOptions = ImageOptions(contentScale = ContentScale.Crop),
+                )
+                Column(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(8.dp),
-                    horizontalArrangement = Arrangement.Center,
+                        .align(Alignment.BottomCenter)
                 ) {
-                    Button(
-                        modifier = Modifier
-                            .weight(1f),
-                        onClick = { onInfoClick(movie.id) },
-                        colors = ButtonDefaults.buttonColors(containerColor = Color.White),
-                        shape = RoundedCornerShape(5),
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.Center
                     ) {
-                        Row(verticalAlignment = Alignment.CenterVertically) {
-                            Icon(
-                                imageVector = Icons.Default.Info,
-                                contentDescription = null,
-                            )
-                            Spacer(modifier = Modifier.width(4.dp))
-                            Text(text = stringResource(R.string.info), color = Color.Black)
+                        movie.genres.forEachIndexed { index, genre ->
+                            Text(text = genre.name)
+                            if (index < movie.genres.size - 1 && movie.genres.size > 1) {
+                                Text(text = stringResource(R.string.bullet))
+                            }
                         }
                     }
-                    Spacer(modifier = Modifier.width(8.dp))
-                    Button(
-                        modifier = Modifier.weight(1f),
-                        onClick = { onAddToMyList(movie) },
-                        colors = ButtonDefaults.buttonColors(containerColor = LightGray),
-                        shape = RoundedCornerShape(5),
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(8.dp),
+                        horizontalArrangement = Arrangement.Center,
                     ) {
-                        Row(verticalAlignment = Alignment.CenterVertically) {
-                            Icon(
-                                imageVector = if (isAddedToMyList) Icons.Default.Check else Icons.Default.Add,
-                                contentDescription = null,
-                                tint = Color.White
-                            )
-                            Spacer(modifier = Modifier.width(4.dp))
-                            Text(text = stringResource(R.string.my_list))
+                        Button(
+                            modifier = Modifier
+                                .weight(1f),
+                            onClick = { onInfoClick(movie.id) },
+                            colors = ButtonDefaults.buttonColors(containerColor = Color.White),
+                            shape = RoundedCornerShape(5),
+                        ) {
+                            Row(verticalAlignment = Alignment.CenterVertically) {
+                                Icon(
+                                    imageVector = Icons.Default.Info,
+                                    contentDescription = null,
+                                )
+                                Spacer(modifier = Modifier.width(4.dp))
+                                Text(text = stringResource(R.string.info), color = Color.Black)
+                            }
+                        }
+                        Spacer(modifier = Modifier.width(8.dp))
+                        Button(
+                            modifier = Modifier.weight(1f),
+                            onClick = { onAddToMyList(movie) },
+                            colors = ButtonDefaults.buttonColors(containerColor = LightGray),
+                            shape = RoundedCornerShape(5),
+                        ) {
+                            Row(verticalAlignment = Alignment.CenterVertically) {
+                                Icon(
+                                    imageVector = if (isAddedToMyList) Icons.Default.Check else Icons.Default.Add,
+                                    contentDescription = null,
+                                    tint = Color.White
+                                )
+                                Spacer(modifier = Modifier.width(4.dp))
+                                Text(text = stringResource(R.string.my_list))
+                            }
                         }
                     }
                 }
@@ -131,6 +143,7 @@ private fun FeaturedSectionPreview() {
                     Genre(3, "Comedy")
                 )
             ),
+            isLoading = true,
             isAddedToMyList = false,
             onInfoClick = {},
             onAddToMyList = {}

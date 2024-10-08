@@ -8,9 +8,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -18,8 +16,10 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.paging.compose.collectAsLazyPagingItems
 import com.ralphevmanzano.moviescompose.R
 import com.ralphevmanzano.moviescompose.domain.model.Category
+import com.ralphevmanzano.moviescompose.domain.model.Movie
 import com.ralphevmanzano.moviescompose.ui.components.MoviesAppBar
 
 @Composable
@@ -32,8 +32,17 @@ fun HomeScreen(
     val allMovies by homeViewModel.allMovies.collectAsStateWithLifecycle()
     val myList by homeViewModel.myList.collectAsStateWithLifecycle()
 
-    LaunchedEffect(key1 = homeViewModel) {
-        homeViewModel.fetchAllMovies()
+    val nowPlayingPaging = homeViewModel.nowPlayingPaging.collectAsLazyPagingItems()
+    val popularPaging = homeViewModel.popularPaging.collectAsLazyPagingItems()
+    val topRatedPaging = homeViewModel.topRatedPaging.collectAsLazyPagingItems()
+    val upcomingPaging = homeViewModel.upcomingPaging.collectAsLazyPagingItems()
+
+    homeViewModel.apply {
+        generateFeaturedMovie(nowPlayingPaging.itemSnapshotList)
+        consumeNowPlayingLoadState(nowPlayingPaging.loadState)
+        consumePopularLoadState(popularPaging.loadState)
+        consumeTopRatedLoadState(topRatedPaging.loadState)
+        consumeUpcomingLoadState(upcomingPaging.loadState)
     }
 
     Box(modifier = modifier.fillMaxSize()) {
@@ -44,46 +53,43 @@ fun HomeScreen(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
-            if (uiState is HomeUiState.Loading && (uiState as HomeUiState.Loading).category == null) {
-                CircularProgressIndicator()
-            } else {
-                LazyColumn(
-                    contentPadding = PaddingValues(vertical = 16.dp)
-                ) {
+
+            LazyColumn(
+                contentPadding = PaddingValues(vertical = 16.dp)
+            ) {
+                item {
+                    FeaturedSection(
+                        movie = uiState.featured ?: Movie(),
+                        modifier = Modifier.padding(horizontal = 12.dp),
+                        isAddedToMyList = myList.any { it.id == uiState.featured?.id },
+                        onInfoClick = { movieId ->
+                            onMovieClicked(movieId)
+                        },
+                        isLoading = uiState.featured == null,
+                        onAddToMyList = { movie ->
+                            homeViewModel.addToMyList(movie)
+                        }
+                    )
+                }
+
+                val categoriesWithMovies = listOf(
+                    Category.NOW_PLAYING to (nowPlayingPaging to uiState.isLoadingNowPlaying),
+                    Category.UPCOMING to (upcomingPaging to uiState.isLoadingUpcoming),
+                    Category.POPULAR to (popularPaging to uiState.isLoadingPopular),
+                    Category.TOP_RATED to (topRatedPaging to uiState.isLoadingTopRated)
+                )
+
+                categoriesWithMovies.forEach { (category, movies) ->
                     item {
-                        FeaturedSection(
-                            movie = allMovies.featured,
-                            modifier = Modifier.padding(horizontal = 12.dp),
-                            isAddedToMyList = myList.any { it.id == allMovies.featured.id },
-                            onInfoClick = { movieId ->
+                        MoviesSection(
+                            category = category,
+                            movieList = movies.first,
+                            modifier = Modifier.fillMaxWidth(),
+                            isLoading = movies.second,
+                            onMovieClicked = { movieId ->
                                 onMovieClicked(movieId)
-                            },
-                            onAddToMyList = { movie ->
-                                homeViewModel.addToMyList(movie)
                             }
                         )
-                    }
-
-                    val categoriesWithMovies = listOf(
-                        Category.NOW_PLAYING to allMovies.nowPlaying,
-                        Category.UPCOMING to allMovies.upcoming,
-                        Category.POPULAR to allMovies.popular,
-                        Category.TOP_RATED to allMovies.topRated
-                    )
-
-                    categoriesWithMovies.forEach { (category, movies) ->
-                        item {
-                            MoviesSection(
-                                category = category,
-                                movieList = movies,
-                                modifier = Modifier.fillMaxWidth(),
-                                isLoading = uiState is HomeUiState.Loading && (uiState as HomeUiState.Loading).category == category,
-                                fetchNextPage = { homeViewModel.fetchNextPage(category) },
-                                onMovieClicked = { movieId ->
-                                    onMovieClicked(movieId)
-                                }
-                            )
-                        }
                     }
                 }
             }

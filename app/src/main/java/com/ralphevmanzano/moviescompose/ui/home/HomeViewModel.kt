@@ -2,9 +2,13 @@ package com.ralphevmanzano.moviescompose.ui.home
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.paging.CombinedLoadStates
+import androidx.paging.ItemSnapshotList
+import androidx.paging.LoadState
+import androidx.paging.PagingData
+import androidx.paging.cachedIn
 import com.ralphevmanzano.moviescompose.data.repository.home.HomeRepository
 import com.ralphevmanzano.moviescompose.data.repository.my_list.MyListRepository
-import com.ralphevmanzano.moviescompose.domain.model.Category
 import com.ralphevmanzano.moviescompose.domain.model.Movie
 import com.ralphevmanzano.moviescompose.domain.model.MoviesWithCategory
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -19,19 +23,14 @@ import javax.inject.Inject
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
-    private val homeRepository: HomeRepository,
+    homeRepository: HomeRepository,
     private val myListRepository: MyListRepository
-): ViewModel() {
-    private val _uiState = MutableStateFlow<HomeUiState>(HomeUiState.Idle)
+) : ViewModel() {
+    private val _uiState = MutableStateFlow(HomeUiState())
     val uiState = _uiState.asStateFlow()
 
     private val _allMovies = MutableStateFlow(MoviesWithCategory(Movie()))
     val allMovies = _allMovies.asStateFlow()
-
-    private var nowPlayingPage = 1
-    private var upcomingPage = 1
-    private var popularPage = 1
-    private var topRatedPage = 1
 
     val myList: StateFlow<List<Movie>> = myListRepository.getMyList()
         .stateIn(
@@ -40,104 +39,33 @@ class HomeViewModel @Inject constructor(
             initialValue = emptyList()
         )
 
-    fun fetchAllMovies() {
-        viewModelScope.launch {
-            homeRepository.getAllMovies(
-                onStart = { _uiState.value = HomeUiState.Loading(null) },
-                onError = { _uiState.value = HomeUiState.Error(it) },
-                onComplete = { _uiState.value = HomeUiState.Idle }
-            ).collect {
-                _allMovies.value = it
-            }
-        }
-    }
+    val nowPlayingPaging = homeRepository.getNowPlayingPaging()
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5000),
+            initialValue = PagingData.empty()
+        ).cachedIn(viewModelScope)
 
-    fun fetchNextPage(category: Category) {
-        if (uiState.value !is HomeUiState.Loading) {
-            when (category) {
-                Category.NOW_PLAYING -> fetchNowPlaying()
-                Category.UPCOMING -> fetchUpcoming()
-                Category.POPULAR -> fetchPopular()
-                Category.TOP_RATED -> fetchTopRated()
-            }
-        }
-    }
+    val popularPaging = homeRepository.getPopularPaging()
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5000),
+            initialValue = PagingData.empty()
+        ).cachedIn(viewModelScope)
 
-    private fun fetchNowPlaying() {
-        viewModelScope.launch {
-            if (_uiState.value != HomeUiState.Loading(Category.NOW_PLAYING)) {
-                nowPlayingPage++
-                homeRepository.getNowPlaying(
-                    page = nowPlayingPage,
-                    onStart = { _uiState.value = HomeUiState.Loading(Category.NOW_PLAYING) },
-                    onComplete = { _uiState.value = HomeUiState.Idle },
-                    onError = { _uiState.value = HomeUiState.Error(it) }
-                ).collect { newPageMovies ->
-                    _allMovies.update { allMovies ->
-                        val currentMovies = allMovies.nowPlaying
-                        allMovies.copy(nowPlaying = (currentMovies + newPageMovies).distinctBy { it.id })
-                    }
-                }
-            }
-        }
-    }
+    val topRatedPaging = homeRepository.getTopRatedPaging()
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5000),
+            initialValue = PagingData.empty()
+        ).cachedIn(viewModelScope)
 
-    private fun fetchUpcoming() {
-        viewModelScope.launch {
-            if (_uiState.value != HomeUiState.Loading(Category.UPCOMING)) {
-                upcomingPage++
-                homeRepository.getUpcoming(
-                    page = upcomingPage,
-                    onStart = { _uiState.value = HomeUiState.Loading(Category.UPCOMING) },
-                    onComplete = { _uiState.value = HomeUiState.Idle },
-                    onError = { _uiState.value = HomeUiState.Error(it) }
-                ).collect { newPageMovies ->
-                    _allMovies.update { allMovies ->
-                        val currentMovies = allMovies.upcoming
-                        allMovies.copy(upcoming = (currentMovies + newPageMovies).distinctBy { it.id })
-                    }
-                }
-            }
-        }
-    }
-
-    private fun fetchPopular() {
-        viewModelScope.launch {
-            if (_uiState.value != HomeUiState.Loading(Category.POPULAR)) {
-                popularPage++
-                homeRepository.getPopular(
-                    page = popularPage,
-                    onStart = { _uiState.value = HomeUiState.Loading(Category.POPULAR) },
-                    onComplete = { _uiState.value = HomeUiState.Idle },
-                    onError = { _uiState.value = HomeUiState.Error(it) }
-                ).collect { newPageMovies ->
-                    _allMovies.update { allMovies ->
-                        val currentMovies = allMovies.popular
-                        allMovies.copy(popular = (currentMovies + newPageMovies).distinctBy { it.id })
-                    }
-                }
-            }
-        }
-    }
-
-    private fun fetchTopRated() {
-        viewModelScope.launch {
-            if (_uiState.value != HomeUiState.Loading(Category.TOP_RATED)) {
-                topRatedPage++
-                homeRepository.getTopRated(
-                    page = topRatedPage,
-                    onStart = { _uiState.value = HomeUiState.Loading(Category.TOP_RATED) },
-                    onComplete = { _uiState.value = HomeUiState.Idle },
-                    onError = { _uiState.value = HomeUiState.Error(it) }
-                ).collect { newPageMovies ->
-                    _allMovies.update { allMovies ->
-                        val currentMovies = allMovies.topRated
-                        allMovies.copy(topRated = (currentMovies + newPageMovies).distinctBy { it.id })
-                    }
-                }
-            }
-        }
-    }
+    val upcomingPaging = homeRepository.getUpcomingPaging()
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5000),
+            initialValue = PagingData.empty()
+        ).cachedIn(viewModelScope)
 
     fun addToMyList(movie: Movie) {
         viewModelScope.launch {
@@ -148,11 +76,123 @@ class HomeViewModel @Inject constructor(
             }
         }
     }
+
+    fun generateFeaturedMovie(itemSnapshotList: ItemSnapshotList<Movie>) {
+        if (_uiState.value.featured == null && itemSnapshotList.isNotEmpty()) {
+            val featured = itemSnapshotList.random()
+            _uiState.update {
+                it.copy(featured = featured)
+            }
+        }
+    }
+
+    fun consumeNowPlayingLoadState(loadState: CombinedLoadStates) {
+        when (loadState.append) {
+            is LoadState.Error -> {
+                _uiState.update {
+                    it.copy(
+                        error = (loadState.append as LoadState.Error).error.message,
+                        isLoadingNowPlaying = false
+                    )
+                }
+            }
+
+            is LoadState.Loading -> {
+                _uiState.update {
+                    it.copy(isLoadingNowPlaying = true)
+                }
+            }
+
+            else -> {
+                _uiState.update {
+                    it.copy(isLoadingNowPlaying = false)
+                }
+            }
+        }
+    }
+
+    fun consumePopularLoadState(loadState: CombinedLoadStates) {
+        when (loadState.append) {
+            is LoadState.Error -> {
+                _uiState.update {
+                    it.copy(
+                        error = (loadState.append as LoadState.Error).error.message,
+                        isLoadingPopular = false
+                    )
+                }
+            }
+
+            is LoadState.Loading -> {
+                _uiState.update {
+                    it.copy(isLoadingPopular = true)
+                }
+            }
+
+            else -> {
+                _uiState.update {
+                    it.copy(isLoadingPopular = false)
+                }
+            }
+        }
+    }
+
+    fun consumeTopRatedLoadState(loadState: CombinedLoadStates) {
+        when (loadState.append) {
+            is LoadState.Error -> {
+                _uiState.update {
+                    it.copy(
+                        error = (loadState.append as LoadState.Error).error.message,
+                        isLoadingTopRated = false
+                    )
+                }
+            }
+
+            is LoadState.Loading -> {
+                _uiState.update {
+                    it.copy(isLoadingTopRated = true)
+                }
+            }
+
+            else -> {
+                _uiState.update {
+                    it.copy(isLoadingTopRated = false)
+                }
+            }
+        }
+    }
+
+    fun consumeUpcomingLoadState(loadState: CombinedLoadStates) {
+        when (loadState.append) {
+            is LoadState.Error -> {
+                _uiState.update {
+                    it.copy(
+                        error = (loadState.append as LoadState.Error).error.message,
+                        isLoadingUpcoming = false
+                    )
+                }
+            }
+
+            is LoadState.Loading -> {
+                _uiState.update {
+                    it.copy(isLoadingUpcoming = true)
+                }
+            }
+
+            else -> {
+                _uiState.update {
+                    it.copy(isLoadingUpcoming = false)
+                }
+            }
+        }
+    }
 }
 
-sealed interface HomeUiState {
-    data object Idle: HomeUiState
-    data class Loading(val category: Category?): HomeUiState
-    data class Error(val message: String?): HomeUiState
-}
+data class HomeUiState(
+    val featured: Movie? = null,
+    val isLoadingNowPlaying: Boolean = false,
+    val isLoadingPopular: Boolean = false,
+    val isLoadingTopRated: Boolean = false,
+    val isLoadingUpcoming: Boolean = false,
+    val error: String? = null
+)
 

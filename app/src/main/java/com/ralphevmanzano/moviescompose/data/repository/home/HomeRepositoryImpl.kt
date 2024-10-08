@@ -1,11 +1,19 @@
 package com.ralphevmanzano.moviescompose.data.repository.home
 
+import androidx.paging.Pager
+import androidx.paging.PagingConfig
+import androidx.paging.PagingData
+import androidx.paging.map
 import com.ralphevmanzano.moviescompose.data.repository.handleApiResponse
 import com.ralphevmanzano.moviescompose.domain.model.Movie
 import com.ralphevmanzano.moviescompose.domain.model.MoviesWithCategory
 import com.ralphevmanzano.moviescompose.network.Dispatcher
 import com.ralphevmanzano.moviescompose.network.MoviesDispatchers
 import com.ralphevmanzano.moviescompose.network.MoviesService
+import com.ralphevmanzano.moviescompose.network.NowPlayingPagingSource
+import com.ralphevmanzano.moviescompose.network.PopularPagingSource
+import com.ralphevmanzano.moviescompose.network.TopRatedPagingSource
+import com.ralphevmanzano.moviescompose.network.UpcomingPagingSource
 import com.skydoves.sandwich.message
 import com.skydoves.sandwich.onFailure
 import com.skydoves.sandwich.suspendOnSuccess
@@ -17,6 +25,8 @@ import kotlinx.coroutines.flow.onCompletion
 import kotlinx.coroutines.flow.onStart
 import javax.inject.Inject
 import kotlinx.coroutines.*
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.onEach
 
 
 class HomeRepositoryImpl @Inject constructor(
@@ -112,4 +122,28 @@ class HomeRepositoryImpl @Inject constructor(
             onError(message())
         }
     }.onStart { onStart() }.onCompletion { onComplete() }.flowOn(ioDispatcher)
+
+    override fun getNowPlayingPaging(): Flow<PagingData<Movie>> {
+        return Pager(PagingConfig(pageSize = 20, prefetchDistance = 4, enablePlaceholders = false)) {
+            NowPlayingPagingSource(moviesService)
+        }.flow
+    }
+
+    override fun getPopularPaging(): Flow<PagingData<Movie>> {
+        return Pager(PagingConfig(pageSize = 20, prefetchDistance = 4, enablePlaceholders = false)) {
+            PopularPagingSource(moviesService)
+        }.flow
+    }
+
+    override fun getTopRatedPaging(): Flow<PagingData<Movie>> {
+        return Pager(PagingConfig(pageSize = 20, prefetchDistance = 4, enablePlaceholders = false)) {
+            TopRatedPagingSource(moviesService)
+        }.flow
+    }
+
+    override fun getUpcomingPaging(): Flow<PagingData<Movie>> {
+        return Pager(PagingConfig(pageSize = 20, prefetchDistance = 4, enablePlaceholders = false)) {
+            UpcomingPagingSource(moviesService)
+        }.flow
+    }
 }
