@@ -57,7 +57,7 @@ fun MoviesSection(
             modifier = Modifier.padding(start = 12.dp)
         )
 
-        if (isLoading && movieList.itemCount == 0) {
+        if (movieList.itemCount == 0) {
             MovieSectionShimmer(modifier = Modifier.padding(top = 4.dp))
         } else {
             LazyRow(
@@ -123,7 +123,7 @@ fun MovieSectionShimmer(modifier: Modifier = Modifier) {
         horizontalArrangement = Arrangement.spacedBy(8.dp),
     ) {
         repeat(4) {
-            MovieItemShimmer(modifier)
+            MovieItemShimmer(modifier = Modifier.size(106.dp, 164.dp))
         }
     }
 }

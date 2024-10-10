@@ -37,7 +37,12 @@ fun HomeScreen(
     val topRatedPaging = homeViewModel.topRatedPaging.collectAsLazyPagingItems()
     val upcomingPaging = homeViewModel.upcomingPaging.collectAsLazyPagingItems()
 
-    LaunchedEffect(nowPlayingPaging.loadState, popularPaging.loadState, topRatedPaging.loadState, upcomingPaging.loadState) {
+    LaunchedEffect(
+        nowPlayingPaging.loadState,
+        popularPaging.loadState,
+        topRatedPaging.loadState,
+        upcomingPaging.loadState
+    ) {
         homeViewModel.consumeNowPlayingLoadState(nowPlayingPaging.loadState)
         homeViewModel.consumePopularLoadState(popularPaging.loadState)
         homeViewModel.consumeTopRatedLoadState(topRatedPaging.loadState)
@@ -94,6 +99,14 @@ fun HomeScreen(
                             }
                         )
                     }
+                }
+
+                item {
+                    PoweredBySection(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(16.dp)
+                    )
                 }
             }
         }
