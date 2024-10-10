@@ -47,7 +47,7 @@ jobs:
           versionCode: ${{ github.run_number }}
 
       - name: Assemble Release Bundle
-        run: ./gradlew bundleRelease
+        run: ./gradlew clean bundleRelease
 
       - name: Sign Release
         uses: r0adkll/sign-android-release@v1
@@ -57,6 +57,9 @@ jobs:
           keyStorePassword: ${{ secrets.KEYSTORE_PASSWORD }}
           alias: ${{ secrets.MOVIES_COMPOSE_ALIAS }}
           keyPassword: ${{ secrets.MOVIES_COMPOSE_ALIAS_PASSWORD }}
+
+      - name: Verify signed bundle
+        run: jarsigner -verify -verbose -certs app/build/outputs/bundle/release/app-release.aab
 
       - name: Setup Authorization with Google Play Store
         run: echo '${{ secrets.PLAY_AUTH_JSON }}' > service_account.json
