@@ -22,6 +22,7 @@ landscapist = "2.3.6"
 composeMaterial = "1.7.2"
 coroutines = "1.9.0"
 androidxHiltNavigationCompose = "1.2.0"
+shakeBugs = "17.0.2"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -64,6 +65,7 @@ landscapist-placeholder = { group = "com.github.skydoves", name = "landscapist-p
 coroutines-core = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-core", version.ref = "coroutines" }
 coroutines-android = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-android", version.ref = "coroutines" }
 androidx-hilt-navigation-compose = { group = "androidx.hilt", name = "hilt-navigation-compose", version.ref = "androidxHiltNavigationCompose" }
+shakebugs = { module = "com.shakebugs:shake", version.ref = "shakeBugs" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
