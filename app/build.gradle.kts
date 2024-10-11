@@ -29,8 +29,8 @@ android {
         val TMDB_API_KEY = "TMDB_API_KEY"
         val SHAKE_API_KEY = "SHAKE_API_KEY"
 
-        val tmdbApiKey = getSecretFromProperties(TMDB_API_KEY)
-        val shakeApiKey = getSecretFromProperties(SHAKE_API_KEY)
+        val tmdbApiKey = System.getenv(TMDB_API_KEY) ?: getSecretFromProperties(TMDB_API_KEY)
+        val shakeApiKey = System.getenv(SHAKE_API_KEY) ?: getSecretFromProperties(SHAKE_API_KEY)
 
 
         buildConfigField("String", TMDB_API_KEY, "\"$tmdbApiKey\"")
