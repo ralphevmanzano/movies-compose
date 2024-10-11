@@ -1,11 +1,11 @@
 import org.jetbrains.kotlin.config.JvmTarget
+import java.util.Properties
 
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
     alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.compose.compiler)
-    alias(libs.plugins.google.secrets)
     alias(libs.plugins.ksp)
     alias(libs.plugins.hilt.android)
 }
@@ -25,6 +25,15 @@ android {
         vectorDrawables {
             useSupportLibrary = true
         }
+
+        val TMDB_API_KEY = "TMDB_API_KEY"
+        val SHAKE_API_KEY = "SHAKE_API_KEY"
+
+        val tmdbApiKey = getSecretFromProperties(TMDB_API_KEY)
+        val shakeApiKey = getSecretFromProperties(SHAKE_API_KEY)
+
+        buildConfigField("String", TMDB_API_KEY, "\"$tmdbApiKey\"")
+        buildConfigField("String", SHAKE_API_KEY, "\"$shakeApiKey\"")
     }
 
     buildTypes {
@@ -57,9 +66,24 @@ android {
     }
 }
 
-secrets {
-    propertiesFileName = "secrets.properties"
-    defaultPropertiesFileName = "secrets.defaults.properties"
+// Function to read the API key from 'secrets.properties' for local development
+fun getSecretFromProperties(key: String): String? {
+    val propertiesFile = rootProject.file("secrets.properties")
+    return if (propertiesFile.exists()) {
+        val properties = Properties().apply {
+            load(propertiesFile.inputStream())
+        }
+        properties.getProperty(key)
+    } else {
+        val defaultPropertiesFile = rootProject.file("secrets.defaults.properties")
+        if (defaultPropertiesFile.exists()) {
+            val defaultProperties = Properties().apply {
+                load(defaultPropertiesFile.inputStream())
+            }
+            defaultProperties.getProperty(key)
+        }
+        null
+    }
 }
 
 dependencies {
