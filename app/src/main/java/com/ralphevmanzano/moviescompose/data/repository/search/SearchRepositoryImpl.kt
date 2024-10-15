@@ -3,7 +3,7 @@ package com.ralphevmanzano.moviescompose.data.repository.search
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
-import com.ralphevmanzano.moviescompose.domain.model.Movie
+import com.ralphevmanzano.moviescompose.model.Movie
 import com.ralphevmanzano.moviescompose.network.Dispatcher
 import com.ralphevmanzano.moviescompose.network.MoviesDispatchers
 import com.ralphevmanzano.moviescompose.network.MoviesService

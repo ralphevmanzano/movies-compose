@@ -33,8 +33,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.ralphevmanzano.moviescompose.R
-import com.ralphevmanzano.moviescompose.domain.model.Genre
-import com.ralphevmanzano.moviescompose.domain.model.Movie
+import com.ralphevmanzano.moviescompose.model.Genre
+import com.ralphevmanzano.moviescompose.model.Movie
 import com.ralphevmanzano.moviescompose.ui.theme.LightGray
 import com.ralphevmanzano.moviescompose.ui.theme.MoviesComposeTheme
 import com.skydoves.landscapist.ImageOptions

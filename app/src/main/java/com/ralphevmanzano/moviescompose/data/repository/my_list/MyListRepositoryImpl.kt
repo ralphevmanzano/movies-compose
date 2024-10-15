@@ -3,7 +3,7 @@ package com.ralphevmanzano.moviescompose.data.repository.my_list
 import com.ralphevmanzano.moviescompose.data.database.MovieDao
 import com.ralphevmanzano.moviescompose.data.database.mapper.toDomain
 import com.ralphevmanzano.moviescompose.data.database.mapper.toEntity
-import com.ralphevmanzano.moviescompose.domain.model.Movie
+import com.ralphevmanzano.moviescompose.model.Movie
 import com.ralphevmanzano.moviescompose.network.Dispatcher
 import com.ralphevmanzano.moviescompose.network.MoviesDispatchers
 import kotlinx.coroutines.CoroutineDispatcher

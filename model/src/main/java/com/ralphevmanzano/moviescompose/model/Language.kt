@@ -1,4 +1,4 @@
-package com.ralphevmanzano.moviescompose.domain.model
+package com.ralphevmanzano.moviescompose.model
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable

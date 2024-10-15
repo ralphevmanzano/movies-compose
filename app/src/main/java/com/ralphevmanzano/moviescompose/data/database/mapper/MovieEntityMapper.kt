@@ -1,7 +1,7 @@
 package com.ralphevmanzano.moviescompose.data.database.mapper
 
 import com.ralphevmanzano.moviescompose.data.database.entity.MovieEntity
-import com.ralphevmanzano.moviescompose.domain.model.Movie
+import com.ralphevmanzano.moviescompose.model.Movie
 
 object MovieEntityMapper: EntityMapper<Movie, MovieEntity> {
 
