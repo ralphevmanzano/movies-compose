@@ -2,7 +2,7 @@ package com.ralphevmanzano.moviescompose.data.repository.home
 
 import androidx.annotation.WorkerThread
 import androidx.paging.PagingData
-import com.ralphevmanzano.moviescompose.domain.model.Movie
+import com.ralphevmanzano.moviescompose.model.Movie
 import kotlinx.coroutines.flow.Flow
 
 interface HomeRepository {

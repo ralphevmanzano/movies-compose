@@ -1,4 +1,4 @@
-package com.ralphevmanzano.moviescompose.domain.model
+package com.ralphevmanzano.moviescompose.model
 
 enum class Category(val title: String) {
     NOW_PLAYING("Now Playing"),

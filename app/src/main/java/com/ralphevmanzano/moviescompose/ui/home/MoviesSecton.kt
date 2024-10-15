@@ -25,8 +25,8 @@ import androidx.compose.ui.unit.dp
 import androidx.paging.PagingData
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
-import com.ralphevmanzano.moviescompose.domain.model.Category
-import com.ralphevmanzano.moviescompose.domain.model.Movie
+import com.ralphevmanzano.moviescompose.model.Category
+import com.ralphevmanzano.moviescompose.model.Movie
 import com.ralphevmanzano.moviescompose.ui.theme.MoviesComposeTheme
 import com.skydoves.landscapist.ImageOptions
 import com.skydoves.landscapist.components.rememberImageComponent

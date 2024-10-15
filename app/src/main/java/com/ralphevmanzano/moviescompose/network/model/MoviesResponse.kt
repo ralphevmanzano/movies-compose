@@ -1,6 +1,6 @@
 package com.ralphevmanzano.moviescompose.network.model
 
-import com.ralphevmanzano.moviescompose.domain.model.Movie
+import com.ralphevmanzano.moviescompose.model.Movie
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 

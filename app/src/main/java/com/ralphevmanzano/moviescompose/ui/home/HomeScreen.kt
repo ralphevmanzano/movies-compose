@@ -19,8 +19,8 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.ralphevmanzano.moviescompose.R
-import com.ralphevmanzano.moviescompose.domain.model.Category
-import com.ralphevmanzano.moviescompose.domain.model.Movie
+import com.ralphevmanzano.moviescompose.model.Category
+import com.ralphevmanzano.moviescompose.model.Movie
 import com.ralphevmanzano.moviescompose.ui.components.MoviesAppBar
 
 @Composable
