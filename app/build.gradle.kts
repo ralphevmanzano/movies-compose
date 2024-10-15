@@ -106,6 +106,9 @@ dependencies {
     implementation(libs.coroutines.core)
     implementation(libs.coroutines.android)
 
+    // modules
+    implementation(project(":model"))
+
     // network
     implementation(platform(libs.retrofit.bom))
     implementation(libs.retrofit)

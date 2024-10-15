@@ -1,8 +1,8 @@
 package com.ralphevmanzano.moviescompose.network
 
+import com.ralphevmanzano.moviescompose.model.Movie
 import com.ralphevmanzano.moviescompose.network.model.GenresResponse
 import com.ralphevmanzano.moviescompose.network.model.MoviesResponse
-import com.ralphevmanzano.moviescompose.domain.model.Movie
 import com.skydoves.sandwich.ApiResponse
 import retrofit2.http.GET
 import retrofit2.http.Path

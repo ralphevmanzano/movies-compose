@@ -44,7 +44,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.ralphevmanzano.moviescompose.R
-import com.ralphevmanzano.moviescompose.domain.model.Movie
+import com.ralphevmanzano.moviescompose.model.Movie
 import com.ralphevmanzano.moviescompose.ui.components.GenreChip
 import com.ralphevmanzano.moviescompose.ui.components.MoviePlaceHolder
 import com.ralphevmanzano.moviescompose.ui.components.TextWithIcon

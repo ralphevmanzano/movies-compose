@@ -2,12 +2,11 @@ package com.ralphevmanzano.moviescompose.network
 
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
-import com.ralphevmanzano.moviescompose.domain.model.Movie
+import com.ralphevmanzano.moviescompose.model.Movie
 import com.ralphevmanzano.moviescompose.network.model.MoviesResponse
 import com.skydoves.sandwich.ApiResponse
 import com.skydoves.sandwich.isSuccess
 import com.skydoves.sandwich.messageOrNull
-import com.skydoves.sandwich.onSuccess
 
 class NowPlayingPagingSource(
     private val moviesService: MoviesService

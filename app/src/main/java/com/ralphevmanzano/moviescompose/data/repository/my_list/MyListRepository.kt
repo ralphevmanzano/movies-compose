@@ -1,6 +1,6 @@
 package com.ralphevmanzano.moviescompose.data.repository.my_list
 
-import com.ralphevmanzano.moviescompose.domain.model.Movie
+import com.ralphevmanzano.moviescompose.model.Movie
 import kotlinx.coroutines.flow.Flow
 
 interface MyListRepository {

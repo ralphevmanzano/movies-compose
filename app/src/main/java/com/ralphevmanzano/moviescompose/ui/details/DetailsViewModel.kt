@@ -7,7 +7,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ralphevmanzano.moviescompose.data.repository.details.DetailsRepository
 import com.ralphevmanzano.moviescompose.data.repository.my_list.MyListRepository
-import com.ralphevmanzano.moviescompose.domain.model.Movie
+import com.ralphevmanzano.moviescompose.model.Movie
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
