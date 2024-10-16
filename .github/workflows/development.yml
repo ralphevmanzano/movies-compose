@@ -1,13 +1,8 @@
 name: Deploy to Firebase
 
 on:
-  workflow_dispatch:
-    inputs:
-      release_notes:
-        type: string
-        description: 'Release notes'
-        required: true
-        default: 'Manual Debug Build'
+  push:
+    branches: [development]
 
 jobs:
   test:
