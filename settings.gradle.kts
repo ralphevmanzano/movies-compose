@@ -22,3 +22,6 @@ dependencyResolutionManagement {
 rootProject.name = "Movies Compose"
 include(":app")
 include(":model")
+include(":data")
+include(":network")
+include(":database")
