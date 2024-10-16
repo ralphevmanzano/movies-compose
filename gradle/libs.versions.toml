@@ -19,7 +19,7 @@ okHttp = "4.12.0"
 googleSecretPlugin = "2.0.1"
 ksp = "2.0.10-1.0.24"
 landscapist = "2.3.6"
-composeMaterial = "1.7.2"
+androidxComposeMaterial3 = "1.3.0"
 coroutines = "1.9.0"
 androidxHiltNavigationCompose = "1.2.0"
 shakeBugs = "17.0.2"
@@ -41,8 +41,7 @@ androidx-ui-tooling = { group = "androidx.compose.ui", name = "ui-tooling" }
 androidx-ui-tooling-preview = { group = "androidx.compose.ui", name = "ui-tooling-preview" }
 androidx-ui-test-manifest = { group = "androidx.compose.ui", name = "ui-test-manifest" }
 androidx-ui-test-junit4 = { group = "androidx.compose.ui", name = "ui-test-junit4" }
-androidx-material3 = { group = "androidx.compose.material3", name = "material3" }
-androidx-compose-material = { group = "androidx.compose.material", name = "material", version.ref = "composeMaterial" }
+androidx-compose-material3 = { group = "androidx.compose.material3", name = "material3", version.ref = "androidxComposeMaterial3" }
 androidx-room-runtime = { module = "androidx.room:room-runtime", version.ref = "androidxRoom" }
 androidx-room-ktx = { module = "androidx.room:room-ktx", version.ref = "androidxRoom" }
 androidx-room-compiler = { module = "androidx.room:room-compiler", version.ref = "androidxRoom" }
