@@ -96,8 +96,7 @@ dependencies {
     implementation(libs.androidx.ui)
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.ui.tooling.preview)
-    implementation(libs.androidx.material3)
-    implementation(libs.androidx.compose.material)
+    implementation(libs.androidx.compose.material3)
 
     implementation(libs.navigation.compose)
     implementation(libs.kotlinx.serialization.json)
@@ -107,37 +106,18 @@ dependencies {
     implementation(libs.coroutines.android)
 
     // modules
-    implementation(project(":model"))
-    implementation(project(":data"))
-
-    // network
-    implementation(platform(libs.retrofit.bom))
-    implementation(libs.retrofit)
-    implementation(libs.retrofit.kotlinx.serialization)
-    implementation(libs.sandwich.retrofit)
-    implementation(libs.sandwich)
-    implementation(platform(libs.okhttp.bom))
-    implementation(libs.okhttp.logging.interceptor)
+    implementation(project(":core:model"))
+    implementation(project(":core:data"))
+    implementation(project(":core:designsystem"))
+    implementation(project(":feature:home"))
+    implementation(project(":feature:details"))
+    implementation(project(":feature:mylist"))
+    implementation(project(":feature:search"))
 
     // hilt
     implementation(libs.hilt.android)
     implementation(libs.androidx.hilt.navigation.compose)
     ksp(libs.hilt.compiler)
-
-    // landscapist
-    implementation(libs.landscapist.glide)
-    implementation(libs.landscapist.palette)
-    implementation(libs.landscapist.animation)
-    implementation(libs.landscapist.placeholder)
-
-    // database
-    implementation(libs.androidx.room.runtime)
-    implementation(libs.androidx.room.ktx)
-    ksp(libs.androidx.room.compiler)
-
-    // paging
-    implementation(libs.androidx.paging.runtime)
-    implementation(libs.androidx.paging.compose)
 
     // shakebugs
     implementation(libs.shakebugs)

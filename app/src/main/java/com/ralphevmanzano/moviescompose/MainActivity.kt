@@ -23,11 +23,11 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.ralphevmanzano.moviescompose.navigation.MovieScreen
 import com.ralphevmanzano.moviescompose.navigation.TopLevelRoute
-import com.ralphevmanzano.moviescompose.ui.details.DetailsScreen
-import com.ralphevmanzano.moviescompose.ui.my_list.MyListScreen
-import com.ralphevmanzano.moviescompose.ui.home.HomeScreen
-import com.ralphevmanzano.moviescompose.ui.search.SearchScreen
-import com.ralphevmanzano.moviescompose.ui.theme.MoviesComposeTheme
+import com.ralphevmanzano.moviescompose.designsystem.theme.MoviesComposeTheme
+import com.ralphevmanzano.moviescompose.details.DetailsScreen
+import com.ralphevmanzano.moviescompose.mylist.MyListScreen
+import com.ralphevmanzano.moviescompose.search.SearchScreen
+import com.ralphevmanzano.moviescompose.home.HomeScreen
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
