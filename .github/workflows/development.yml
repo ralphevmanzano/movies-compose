@@ -20,8 +20,7 @@ jobs:
           cache: 'gradle'
 
       - name: Create google-services.json
-        run: |
-          echo ${{ secrets.GOOGLE_SERVICES_JSON }} > ./app/google-services.json
+        run: echo '${{ secrets.GOOGLE_SERVICES_JSON }}' > ./app/google-services.json
 
       - name: Grant execute permissions for gradlew
         run: chmod +x gradlew
@@ -45,8 +44,7 @@ jobs:
           cache: 'gradle'
 
       - name: Create google-services.json
-        run: |
-          echo ${{ secrets.GOOGLE_SERVICES_JSON }} > ./app/google-services.json
+        run: echo '${{ secrets.GOOGLE_SERVICES_JSON }}' > ./app/google-services.json
 
       - name: Grant execute permissions for gradlew
         run: chmod +x gradlew
