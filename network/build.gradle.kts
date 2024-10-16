@@ -2,29 +2,22 @@ import org.jetbrains.kotlin.config.JvmTarget
 import java.util.Properties
 
 plugins {
-    alias(libs.plugins.android.application)
+    alias(libs.plugins.android.library)
     alias(libs.plugins.jetbrains.kotlin.android)
-    alias(libs.plugins.kotlin.serialization)
-    alias(libs.plugins.compose.compiler)
-    alias(libs.plugins.ksp)
     alias(libs.plugins.hilt.android)
+    alias(libs.plugins.ksp)
+    alias(libs.plugins.kotlin.serialization)
 }
 
 android {
-    namespace = "com.ralphevmanzano.moviescompose"
+    namespace = "com.ralphevmanzano.moviescompose.network"
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "com.ralphevmanzano.moviescompose"
         minSdk = 26
-        targetSdk = 34
-        versionCode = 1
-        versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-        vectorDrawables {
-            useSupportLibrary = true
-        }
+        consumerProguardFiles("consumer-rules.pro")
 
         val TMDB_API_KEY = "TMDB_API_KEY"
         val SHAKE_API_KEY = "SHAKE_API_KEY"
@@ -54,16 +47,7 @@ android {
         jvmTarget = JvmTarget.JVM_17.toString()
     }
     buildFeatures {
-        compose = true
         buildConfig = true
-    }
-    composeOptions {
-        kotlinCompilerExtensionVersion = "1.5.1"
-    }
-    packaging {
-        resources {
-            excludes += "/META-INF/{AL2.0,LGPL2.1}"
-        }
     }
 }
 
@@ -88,29 +72,15 @@ fun getSecretFromProperties(key: String): String? {
 }
 
 dependencies {
+    implementation(project(":model"))
 
     implementation(libs.androidx.core.ktx)
-    implementation(libs.androidx.lifecycle.runtime.ktx)
-    implementation(libs.androidx.activity.compose)
-    implementation(platform(libs.androidx.compose.bom))
-    implementation(libs.androidx.ui)
-    implementation(libs.androidx.ui.graphics)
-    implementation(libs.androidx.ui.tooling.preview)
-    implementation(libs.androidx.material3)
-    implementation(libs.androidx.compose.material)
+    implementation(libs.androidx.appcompat)
+    implementation(libs.material)
 
-    implementation(libs.navigation.compose)
-    implementation(libs.kotlinx.serialization.json)
-    implementation(libs.androidx.lifecycle.viewmodel.ktx)
+    implementation(libs.hilt.android)
+    ksp(libs.hilt.compiler)
 
-    implementation(libs.coroutines.core)
-    implementation(libs.coroutines.android)
-
-    // modules
-    implementation(project(":model"))
-    implementation(project(":data"))
-
-    // network
     implementation(platform(libs.retrofit.bom))
     implementation(libs.retrofit)
     implementation(libs.retrofit.kotlinx.serialization)
@@ -119,34 +89,13 @@ dependencies {
     implementation(platform(libs.okhttp.bom))
     implementation(libs.okhttp.logging.interceptor)
 
-    // hilt
-    implementation(libs.hilt.android)
-    implementation(libs.androidx.hilt.navigation.compose)
-    ksp(libs.hilt.compiler)
-
-    // landscapist
-    implementation(libs.landscapist.glide)
-    implementation(libs.landscapist.palette)
-    implementation(libs.landscapist.animation)
-    implementation(libs.landscapist.placeholder)
-
-    // database
-    implementation(libs.androidx.room.runtime)
-    implementation(libs.androidx.room.ktx)
-    ksp(libs.androidx.room.compiler)
-
-    // paging
     implementation(libs.androidx.paging.runtime)
-    implementation(libs.androidx.paging.compose)
 
-    // shakebugs
+    implementation(libs.kotlinx.serialization.json)
+
     implementation(libs.shakebugs)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
-    androidTestImplementation(platform(libs.androidx.compose.bom))
-    androidTestImplementation(libs.androidx.ui.test.junit4)
-    debugImplementation(libs.androidx.ui.tooling)
-    debugImplementation(libs.androidx.ui.test.manifest)
 }
