@@ -25,6 +25,8 @@ androidxHiltNavigationCompose = "1.2.0"
 shakeBugs = "17.0.2"
 appcompat = "1.7.0"
 material = "1.12.0"
+googleServicesPlugin = "4.4.2"
+firebase = "33.4.0"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -69,6 +71,7 @@ androidx-hilt-navigation-compose = { group = "androidx.hilt", name = "hilt-navig
 shakebugs = { module = "com.shakebugs:shake", version.ref = "shakeBugs" }
 androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
 material = { group = "com.google.android.material", name = "material", version.ref = "material" }
+firebase-bom = { group = "com.google.firebase", name = "firebase-bom", version.ref = "firebase" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
@@ -81,3 +84,4 @@ hilt-android-app = { id = "com.google.dagger.hilt.android" }
 google-secrets = { id = "com.google.android.libraries.mapsplatform.secrets-gradle-plugin", version.ref = "googleSecretPlugin" }
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 android-library = { id = "com.android.library", version.ref = "agp" }
+google-services = { id = "com.google.gms.google-services", version.ref = "googleServicesPlugin" }

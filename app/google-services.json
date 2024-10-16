@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "681148875441",
+    "project_id": "movies-compose-3d044",
+    "storage_bucket": "movies-compose-3d044.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:681148875441:android:51473c7ae1e1fbf2b21890",
+        "android_client_info": {
+          "package_name": "com.ralphevmanzano.moviescompose"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCGC5EWm-b232zw6Gkxw5FIbaU_D01o1Rg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
