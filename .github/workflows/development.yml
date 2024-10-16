@@ -1,0 +1,64 @@
+name: Deploy to Firebase
+
+on:
+  workflow_dispatch:
+    inputs:
+      release_notes:
+        type: string
+        description: 'Release notes'
+        required: true
+        default: 'Manual Debug Build'
+
+jobs:
+  test:
+    name: Unit Test
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: 17
+          cache: 'gradle'
+
+      - name: Grant execute permissions for gradlew
+        run: chmod +x gradlew
+
+      - name: Run unit tests
+        run: ./gradlew clean testDebug
+
+  build:
+    name: Building and distributing app
+    needs: test
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: 17
+          cache: 'gradle'
+
+      - name: Grant execute permissions for gradlew
+        run: chmod +x gradlew
+
+      - name: Assemble Release Bundle
+        run: ./gradlew bundleRelease
+        env:
+          TMDB_API_KEY: ${{ secrets.TMDB_API_KEY }}
+          SHAKE_API_KEY: ${{ secrets.SHAKE_API_KEY }}
+
+      - name: upload artifact to Firebase App Distribution
+        uses: wzieba/Firebase-Distribution-Github-Action@v1
+        with:
+          appId: ${{ secrets.FIREBASE_APP_ID }}
+          serviceCredentialsFileContent: ${{ secrets.PLAY_AUTH_JSON }}
+          groups: internal-tester
+          file: app/build/outputs/bundle/release/app-release.aab
+          releaseNotesFile: whatsNew/
