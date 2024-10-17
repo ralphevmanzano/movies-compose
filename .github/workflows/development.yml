@@ -49,18 +49,17 @@ jobs:
       - name: Grant execute permissions for gradlew
         run: chmod +x gradlew
 
-      - name: Assemble Release Bundle
-        run: ./gradlew bundleRelease
+      - name: Assemble Release apk
+        run: ./gradlew assembleRelease
         env:
           TMDB_API_KEY: ${{ secrets.TMDB_API_KEY }}
           SHAKE_API_KEY: ${{ secrets.SHAKE_API_KEY }}
 
-      - name: upload artifact to Firebase App Distribution
+      - name: Upload artifact to Firebase App Distribution
         uses: wzieba/Firebase-Distribution-Github-Action@v1
         with:
           appId: ${{ secrets.FIREBASE_APP_ID }}
           serviceCredentialsFileContent: ${{ secrets.PLAY_AUTH_JSON }}
           groups: internal-tester
-          file: app/build/outputs/bundle/release/app-release.aab
-          releaseNotesFile: whatsNew/
+          file: app/build/outputs/apk/release/app-release-unsigned.apk
           debug: true
