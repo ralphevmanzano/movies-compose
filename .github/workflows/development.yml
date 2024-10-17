@@ -63,3 +63,4 @@ jobs:
           groups: internal-tester
           file: app/build/outputs/bundle/release/app-release.aab
           releaseNotesFile: whatsNew/
+          debug: true
